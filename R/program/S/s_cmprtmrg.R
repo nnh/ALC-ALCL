@@ -2,16 +2,14 @@
 # Program Name : s_cmprtmrg.R
 # Study Name : J-TALC2
 # Author : Kato Kiroku
-# Date : 2019/08/02
+# Date : 2019/08/22
 # Output : cmprtmrg.csv
 ########################################
 
 
-# How to handle duplicate values?
-
-install.packages("sas7bdat")
 library(sas7bdat)
 library(dplyr)
+library(data.table)
 
 getwd()
 prtpath <- "//ARONAS/Stat/Trials/Chiken/J-TALC2"
@@ -26,11 +24,15 @@ cm <- read.csv(paste0(rawpath, "/J-TALC2_cm_190725_1055.csv"), na.strings = c(""
 idf$MEDDRUGFULL_h5 <- substr(idf$MEDDRUGFULL, 1, 5)
 cm$薬剤名_h5 <- substr(cm$薬剤名, 1, 5)
 
-names(idf)[names(idf) == "MEDDRUGFULL_h5"] <- "Med.Gen.merge"
-names(cm)[names(cm) == "薬剤名_h5"] <- "Med.Gen.merge"
+names(idf)[names(idf) == "MEDDRUGFULL_h5"] <- "temp"
+names(cm)[names(cm) == "薬剤名_h5"] <- "temp"
 
-com <- merge(cm, idf, by = "Med.Gen.merge", all = FALSE, sort = TRUE)
-# Duplicates Values Deleted
-com_2 <- distinct(com, Med.Gen.merge, .keep_all = TRUE)
+com <- merge(cm, idf, by = "temp", all = FALSE, sort = TRUE)
+names(com)[names(com) == "temp"] <- "薬剤名_h5"
+setDT(com)[, number := rleid(薬剤名_h5, 症例登録番号, 投与開始日)]
+com_2 <- select(com, number, everything())
 
-write.csv(com, paste0(outpath, "/cmprtmrg.csv"), na = "", row.names = FALSE)
+write.csv(com_2, paste0(outpath, "/cmprtmrg.csv"), na = "", row.names = TRUE)
+
+# To identify duplicate column names
+# tibble::enframe(names(com)) %>% count(value) %>% filter(n > 1)
