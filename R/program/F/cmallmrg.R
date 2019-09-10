@@ -28,42 +28,16 @@ outfname <- paste0(prtPath, "/output/F/cmallmrg.csv")
 rdata <- read.csv(rfname, as.is=T, na.strings="")
 edata <- read.sas7bdat(efname, debug=FALSE)
 
+# PtoshのデータにNoを追加する
+for (i in 1:nrow(rdata)) {
+  rdata$No[i] <- i
+}
+
 # マージ （一致した項目のみ表示）Key＝Ptosh：薬剤名、SAS：一般名
 re.merge <- merge(rdata, edata,  by.x="薬剤名", by.y="MEDDRUGFULL", is.na="")
 
-# 比較時に比較済みかどうかの区別をつけるために、Noに全て0を代入しておく
-re.merge$No <- 0
-
-# 症例登録番号・薬剤名・投与経路？が一致の場合、区分番号（cnt)を同じにする。（処理は以下）
-# １つ目のforで比較対象を抽出して、その中でもう一回forを回して比較していく
-# 比較した結果一致すれば、cntをNo（区分番号）へ入れていく
-cnt <- 1
-for (i in 1:nrow(re.merge)) {
-  if(re.merge$No[i] == 0){
-
-    # 比較対象のNoは０なら入れる
-    re.merge$No[i] <- cnt
-    # 比較対象を退避
-    ComNo <- re.merge$症例登録番号[i]
-    ComMed <- re.merge$薬剤名[i]
-    ComRt <- re.merge$投与経路[i]
-    
-    # forで回して比較対象と比較していく、一致ならcntを入れる
-    for (j in 1:nrow(re.merge)) {
-      if(re.merge$No[j] == 0){
-        if((re.merge$症例登録番号[j] == ComNo) && (re.merge$薬剤名[j] == ComMed) && (re.merge$投与経路[j] == ComRt)){
-          re.merge$No[j] <- cnt
-        }
-      }
-    }
-    
-    # cnt値をcntアップ
-    cnt <- cnt + 1
-  }
-}
-
-# 列の順番入れ替え（Noを先頭に持ってくる）
-result <- re.merge[,c(59,1:58)]
+# 列の順番入れ替え（No,Ptosh(マージで先頭に移動した薬剤名をもとの位置に戻す),SAS）
+result <- re.merge[,c(36,1:35,37:59)]
 
 # CSVファイル出力
-write.csv(result, outfname, row.names=T, na="")
+write.csv(result, outfname, row.names=F, na="")
