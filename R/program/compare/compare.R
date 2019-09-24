@@ -2,7 +2,7 @@
 # Program Name : compare.R
 # Study Name : J-TALC2
 # Author : Kato Kiroku
-# Date : 2019/08/16
+# Date : 2019/09/13
 # Output :
 ########################################
 
@@ -17,12 +17,15 @@ second_all <- read.csv(paste0(outpath, "/QC/cmallmrg.csv"), na.strings = c(""), 
 
 identical(first_all, second_all)
 
-# first_prt <- read.csv(paste0(outpath, "/F/cmprtmrg.csv"), na.strings = c(""), as.is = TRUE)
-# second_prt <- read.csv(paste0(outpath, "/QC/cmprtmrg.csv"), na.strings = c(""), as.is = TRUE)
+first_prt <- read.csv(paste0(outpath, "/F/cmprtmrg.csv"), na.strings = c(""), as.is = TRUE)
+second_prt <- read.csv(paste0(outpath, "/QC/cmprtmrg.csv"), na.strings = c(""), as.is = TRUE)
+
+identical(first_prt, second_prt)
+
+
+# all.equal(first_prt, second_prt)
 #
-# identical(first_prt, second_prt)
-
-
+#
 # library(dplyr)
 # library(magrittr)
 #
