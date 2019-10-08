@@ -2,7 +2,7 @@
 # Program Name : s_cmprtmrg.R
 # Study Name : J-TALC2
 # Author : Kato Kiroku
-# Date : 2019/09/13
+# Date : 2019/10/08
 # Output : cmprtmrg.csv
 ########################################
 
@@ -28,6 +28,17 @@ cm$No <- 1:nrow(cm)
 combined <- merge(cm, idf, by = "temp", all = FALSE, sort = TRUE)
 names(combined)[names(combined) == "temp"] <- "ComData"
 combined_2 <- select(combined, No, everything())
+
+combined_2$applicable <- ifelse(combined_2$投与経路 == "外用" & combined_2$USECAT2 == "外", 1,
+                                ifelse(combined_2$投与経路 == "経口" & combined_2$USECAT2 == "内", 1,
+                                       ifelse(combined_2$投与経路 == "静注" & combined_2$USECAT2 == "注", 1,
+                                              ifelse(combined_2$投与経路 == "皮下注" & combined_2$USECAT2 == "注", 1,
+                                                     ifelse(combined_2$投与経路 == "胸腔内", 1,
+                                                            ifelse(combined_2$投与経路 == "その他", 1, 0))))))
+
+combined_2 <- combined_2 %>%
+  subset(applicable == 1) %>%
+  select(No, 投与経路, USECAT2, applicable, everything(), -applicable)
 
 write.csv(combined_2, paste0(outpath, "/cmprtmrg.csv"), na = "", row.names = FALSE)
 
