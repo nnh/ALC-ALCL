@@ -51,7 +51,6 @@ re.merge <- merge(rdata, edata,  by="ComData", is.na="")
 # 2019.10.10 Agata.K マージの条件に投与経路が追加となったため、処理を追加--------------------------------------------------------------
 # 投薬経路により不要なデータは削除する（投薬経路とUSECAT２）
 cnt <- 1
-
 for (i in 1:nrow(re.merge)) {
   
   if((re.merge$投与経路[cnt] == "外用") & (re.merge$USECAT2[cnt] != "外")){         # 投薬経路が【外用】、USECAT2が【外】以外 ：　行削除
