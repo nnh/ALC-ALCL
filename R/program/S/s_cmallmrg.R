@@ -2,7 +2,7 @@
 # Program Name : s_cmallmrg.R
 # Study Name : J-TALC2
 # Author : Kato Kiroku
-# Date : 2019/10/08
+# Date : 2019/10/16
 # Output : cmallmrg.csv
 ########################################
 
@@ -25,17 +25,16 @@ cm$No <- 1:nrow(cm)
 names(idf)[names(idf) == "MEDDRUGFULL"] <- "薬剤名"
 
 combined <- merge(cm, idf, by = "薬剤名", all = FALSE, sort = TRUE)
-combined_2 <- select(combined, No, everything())
 
-combined_2$applicable <- ifelse(combined_2$投与経路 == "外用" & combined_2$USECAT2 == "外", 1,
-                       ifelse(combined_2$投与経路 == "経口" & combined_2$USECAT2 == "内", 1,
-                              ifelse(combined_2$投与経路 == "静注" & combined_2$USECAT2 == "注", 1,
-                                     ifelse(combined_2$投与経路 == "皮下注" & combined_2$USECAT2 == "注", 1,
-                                            ifelse(combined_2$投与経路 == "胸腔内", 1,
-                                                   ifelse(combined_2$投与経路 == "その他", 1, 0))))))
+combined$applicable <- ifelse(combined$投与経路 == "外用" & combined$USECAT2 == "外", 1,
+                              ifelse(combined$投与経路 == "経口" & combined$USECAT2 == "内", 1,
+                                     ifelse(combined$投与経路 == "静注" & combined$USECAT2 == "注", 1,
+                                            ifelse(combined$投与経路 == "皮下注" & combined$USECAT2 == "注", 1,
+                                                   ifelse(combined$投与経路 == "胸腔内", 1,
+                                                          ifelse(combined$投与経路 == "その他", 1, 0))))))
 
-combined_2 <- combined_2 %>%
+combined <- combined %>%
   subset(applicable == 1) %>%
-  select(No, 投与経路, USECAT2, applicable, everything(), -applicable)
+  select(No, everything(), -applicable)
 
-write.csv(combined_2, paste0(outpath, "/cmallmrg.csv"), na = "", row.names = FALSE)
+write.csv(combined, paste0(outpath, "/cmallmrg.csv"), na = "", row.names = FALSE)
