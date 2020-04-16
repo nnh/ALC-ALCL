@@ -27,7 +27,7 @@ prtPath <- "//ARONAS/Stat/Trials/Chiken/J-TALC2"
 rfname <- paste0(prtPath, "/input/rawdata/J-TALC2_cm_190725_1055.csv")
 efname <- paste0(prtPath, "/input/ext/idf_20190422.sas7bdat")
 outfname <- paste0(prtPath, "/output/F/cmallmrg.csv")
-nmatch_outfname <- paste0(prtPath, "/output/F/notmatch_allmrg.csv") #不一致リスト
+nmatch_outfname <- paste0(prtPath, "/output/F/notmatch_allmrg.csv")
 #---------------------------------------------------------------------
 
 # ファイル読込(Ptosh/SAS)
