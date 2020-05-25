@@ -88,17 +88,21 @@ for (i in 1:nrow(re.merge)) {
 ret <- match[,c(36,1:35,37:59)]
 nret <- not.match[,c(36,1:35,37:59)]
 
-# 一致データをソート（1症例番号、2開始日）2020.04.20 Agata.K
+# 一致データをソート（1症例番号、2開始日、3薬剤名）2020.04.22 Agata.K
 ret_sort <- order(ret$症例登録番号)
 ret <- ret[ret_sort,]
 ret_sort <- order(ret$投与開始日)
 ret <- ret[ret_sort,]
+ret_sort <- order(ret$薬剤名)
+ret <- ret[ret_sort,]
 
-# 不一致データをソート（1症例番号、2開始日）2020.04.20 Agata.K
+# 不一致データをソート（1症例番号、2開始日、3薬剤名）2020.04.22 Agata.K
 ret_sort <- order(nret$症例登録番号)
 nret <- nret[ret_sort,]
 ret_sort <- order(nret$投与開始日)
 nret <- nret[ret_sort,]
+ret_sort <- order(ret$薬剤名)
+ret <- ret[ret_sort,]
 
 # CSVファイル出力
 write.csv(ret, outfname, row.names=F, na="")
