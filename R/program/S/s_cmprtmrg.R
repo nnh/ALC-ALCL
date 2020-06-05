@@ -2,10 +2,9 @@
 # Program Name : s_cmprtmrg.R
 # Study Name : J-TALC2
 # Author : Kato Kiroku
-# Date : 2019/10/16
-# Output : cmprtmrg.csv
+# Date : 2020/06/05
+# Output : cmprtmrg_match.csv
 ########################################
-
 
 library(sas7bdat)
 library(dplyr)
@@ -39,7 +38,6 @@ combined <- combined %>%
   subset(applicable == 1) %>%
   select(No, everything(), -applicable)
 
-write.csv(combined, paste0(outpath, "/cmprtmrg.csv"), na = "", row.names = FALSE)
+combined <- combined[with(combined, order(症例登録番号, 投与開始日, 薬剤名, DRUGCODE)), ]
 
-# To identify duplicate column names
-# tibble::enframe(names(com)) %>% count(value) %>% filter(n > 1)
+write.csv(combined, paste0(outpath, "/cmprtmrg_match.csv"), na = "", row.names = FALSE)
