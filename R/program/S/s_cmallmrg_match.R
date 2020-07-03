@@ -36,8 +36,8 @@ combined$applicable <- ifelse(combined$投与経路 == "外用" & combined$USECA
 
 combined <- combined %>%
   subset(applicable == 1) %>%
-  select(No, everything(), -applicable)
+  select(No, everything(), -applicable, -ComData)
 
-combined <- combined[with(combined, order(症例登録番号, 投与開始日, 薬剤名, DRUGCODE)), ]
+combined <- combined[with(combined, order(症例登録番号, 投与開始日, 薬剤名, DRUGCODE, No)), ]
 
 write.csv(combined, paste0(outpath, "/cmallmrg_match.csv"), na = "", row.names = FALSE)

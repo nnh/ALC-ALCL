@@ -44,7 +44,7 @@ names(combined_f)[names(combined_f) == "temp"] <- "ComData"
 CommonColumnNames <- intersect(names(combined_f), names(combined_t))
 combined_f <- merge(combined_f, combined_t, by = CommonColumnNames, all = TRUE, sort = TRUE) %>%
   subset(applicable != 1 | is.na(applicable)) %>%
-  select(No, everything(), -applicable)
+  select(No, everything(), -applicable, -ComData)
 
 # combined$applicable <- ifelse(combined$投与経路 == "外用" & combined$USECAT2 == "外", 1,
 #                               ifelse(combined$投与経路 == "経口" & combined$USECAT2 == "内", 1,
@@ -58,6 +58,6 @@ combined_f <- merge(combined_f, combined_t, by = CommonColumnNames, all = TRUE, 
 #   subset(applicable != 1 | is.na(applicable)) %>%
 #   select(No, everything(), -applicable)
 
-mismatch <- combined_f[with(combined_f, order(症例登録番号, 投与開始日, 薬剤名, DRUGCODE)), ]
+mismatch <- combined_f[with(combined_f, order(症例登録番号, 投与開始日, 薬剤名, DRUGCODE, No)), ]
 
 write.csv(mismatch, paste0(outpath, "/cmallmrg_notmatch.csv"), na = "", row.names = FALSE)
